@@ -5,6 +5,60 @@
 ---
 
 ---@return number
+local function getAgilityBonus()
+    local bonus = SandboxVars.SkillLimiter.AgilityBonus
+    if bonus == nil then
+        bonus = 0
+    end
+    return bonus
+end
+
+---@return number
+local function getCombatBonus()
+    local bonus = SandboxVars.SkillLimiter.CombatBonus
+    if bonus == nil then
+        bonus = 0
+    end
+    return bonus
+end
+
+---@return number
+local function getCraftingBonus()
+    local bonus = SandboxVars.SkillLimiter.CraftingBonus
+    if bonus == nil then
+        bonus = 0
+    end
+    return bonus
+end
+
+---@return number
+local function getFirearmBonus()
+    local bonus = SandboxVars.SkillLimiter.FirearmBonus
+    if bonus == nil then
+        bonus = 0
+    end
+    return bonus
+end
+
+---@return number
+local function getSurvivalistBonus()
+    local bonus = SandboxVars.SkillLimiter.SurvivalistBonus
+    if bonus == nil then
+        bonus = 0
+    end
+    return bonus
+end
+
+---@return number
+local function getPassivesBonus()
+    local bonus = SandboxVars.SkillLimiter.PassivesBonus
+    if bonus == nil then
+        bonus = 0
+    end
+    return bonus
+end
+
+---@return number
 ---@param character IsoGameCharacter
 ---@param perk PerkFactory.Perk
 ---@param bonus number @The bonus to apply to final score before deciding max skill level. Can be left nil.
@@ -72,23 +126,49 @@ local function limitSkill(character, perk, level, levelUp)
         return
     end
 
-    -- If perk is Strength, Fitness, or Piano, return.
-    -- These are physical skills, and we do not need to limit them.
+    -- If perk is Piano, return.
+    -- This is a modded skills, and we do not need to limit it.
+    -- Proper mod support might be added at *some* point.
     local perk_name = perk:getName():lower()
-    if perk_name == "strength" or perk_name == "fitness" or perk_name == "piano" then
+    if perk_name == "piano" then
         return
     end
 
     local bonus = 0
 
-    -- If perk is Sprinting, Lightfooted, Nimble, or Sneaking, then we give a +2 bonus.
+    -- If perk is Sprinting, Lightfooted, Nimble, or Sneaking, add the relevant Agility bonus.
     if perk_name == "sprinting" or perk_name == "lightfooted" or perk_name == "nimble" or perk_name == "sneaking" then
-        bonus = 2
+        bonus = getAgilityBonus()
     end
 
-    -- If perk is Axe, Long Blunt, Short Blunt, Long Blade, Short Blade, Spear, Maintenance, Aiming, or Reloading, then we give a +1 bonus.
-    if perk_name == "axe" or perk_name == "long blunt" or perk_name == "short blunt" or perk_name == "long blade" or perk_name == "short blade" or perk_name == "spear" or perk_name == "maintenance" or perk_name == "aiming" or perk_name == "reloading" then
-        bonus = 1
+    -- If perk is Axe, Long Blunt, Short Blunt, Long Blade, Short Blade, Spear, or Maintenance, then we add the relevant Combat bonus.
+    if perk_name == "axe" or perk_name == "long blunt" or perk_name == "short blunt" or perk_name == "long blade" or perk_name == "short blade" or perk_name == "spear" or perk_name == "maintenance" then
+        bonus = getCombatBonus()
+    end
+
+    -- If perk is Carpentry, Cooking, Farming, First Aid, Electrical, Metalworking, Mechanics, or Tailoring, then we add the relevant Crafting bonus.
+    if perk_name == "carpentry" or perk_name == "cooking" or perk_name == "farming" or perk_name == "first aid" or perk_name == "electrical" or perk_name == "metalworking" or perk_name == "mechanics" or perk_name == "tailoring" then
+        bonus = getCraftingBonus()
+    end
+
+    -- If perk is Aiming or Reloading, then we add the relevant Firearm bonus.
+    if perk_name == "aiming" or perk_name == "reloading" then
+        bonus = getFirearmBonus()
+    end
+
+    -- If perk is Fishing, Trapping, or Foraging, add the relevant Survivalist bonus.
+    if perk_name == "fishing" or perk_name == "trapping" or perk_name == "foraging" then
+        bonus = getSurvivalistBonus()
+    end
+
+    -- If perk is Strength or Fitness, add the relevant Passives bonus.
+    if perk_name == "strength" or perk_name == "fitness" then
+        bonus = getPassivesBonus()
+    end
+
+    -- If bonus is 3, we do not need to check whether or not we should cap the skill. Return.
+    if bonus >= 3 then
+        return
     end
 
     -- Get the maximum skill level for this perk, based on the character's traits & profession.
@@ -102,7 +182,7 @@ local function limitSkill(character, perk, level, levelUp)
         character:setPerkLevelDebug(perk, max_skill)
     end
 
-    print("SkillLimiter: " .. character:getFullName() .. " leveled up " .. perk:getName() .. " and was capped to " .. max_skill .. ".")
+    print("SkillLimiter: " .. character:getFullName() .. " leveled up " .. perk:getName() .. " and was capped to " .. max_skill .. "." .. "Bonus: " .. bonus)
 end
 
 Events.LevelPerk.Add(limitSkill)
