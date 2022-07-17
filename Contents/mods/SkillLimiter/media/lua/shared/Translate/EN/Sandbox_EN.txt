@@ -14,8 +14,8 @@ Sandbox_EN = {
 	Sandbox_SkillLimiter_FirearmBonus_tooltip = "The bonus to the skill cap for firearms skills. (0 - 3)",
 
 	Sandbox_SkillLimiter_SurvivalistBonus = "Survivalist Bonus",
-	Sandbox_SkillLimiter_SurvivalistBonus_tooltip = "The bonus to the skill cap for survival skills. (0 - 3)",
+	Sandbox_SkillLimiter_SurvivalistBonus_tooltip = "The bonus to the skill cap for survivalist skills. (0 - 3)",
 
 	Sandbox_SkillLimiter_PassivesBonus = "Passives Bonus",
-	Sandbox_SkillLimiter_PassivesBonus_tooltip = "The bonus to the skill cap for passives skills. (0 - 3)",
+	Sandbox_SkillLimiter_PassivesBonus_tooltip = "The bonus to the skill cap for passive skills. (0 - 3)",
 }
