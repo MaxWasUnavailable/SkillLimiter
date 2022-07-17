@@ -1,15 +1,21 @@
 Sandbox_EN = {
 	Sandbox_SkillLimiter = "Skill Limiter",
+
 	Sandbox_SkillLimiter_AgilityBonus = "Agility Bonus",
-	Sandbox_SkillLimiter_AgilityBonus_tooltip = "The bonus to the skill cap for agility skills.",
+	Sandbox_SkillLimiter_AgilityBonus_tooltip = "The bonus to the skill cap for agility skills. (0 - 3)",
+
 	Sandbox_SkillLimiter_CombatBonus = "Combat Bonus",
-	Sandbox_SkillLimiter_CombatBonus_tooltip = "The bonus to the skill cap for combat skills.",
+	Sandbox_SkillLimiter_CombatBonus_tooltip = "The bonus to the skill cap for combat skills. (0 - 3)",
+
 	Sandbox_SkillLimiter_CraftingBonus = "Crafting Bonus",
-	Sandbox_SkillLimiter_CraftingBonus_tooltip = "The bonus to the skill cap for crafting skills.",
+	Sandbox_SkillLimiter_CraftingBonus_tooltip = "The bonus to the skill cap for crafting skills. (0 - 3)",
+
 	Sandbox_SkillLimiter_FirearmBonus = "Firearm Bonus",
-	Sandbox_SkillLimiter_FirearmBonus_tooltip = "The bonus to the skill cap for firearms skills.",
+	Sandbox_SkillLimiter_FirearmBonus_tooltip = "The bonus to the skill cap for firearms skills. (0 - 3)",
+
 	Sandbox_SkillLimiter_SurvivalistBonus = "Survivalist Bonus",
-	Sandbox_SkillLimiter_SurvivalistBonus_tooltip = "The bonus to the skill cap for survival skills.",
+	Sandbox_SkillLimiter_SurvivalistBonus_tooltip = "The bonus to the skill cap for survival skills. (0 - 3)",
+
 	Sandbox_SkillLimiter_PassivesBonus = "Passives Bonus",
-	Sandbox_SkillLimiter_PassivesBonus_tooltip = "The bonus to the skill cap for passives skills.",
+	Sandbox_SkillLimiter_PassivesBonus_tooltip = "The bonus to the skill cap for passives skills. (0 - 3)",
 }

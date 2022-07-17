@@ -2,36 +2,66 @@ VERSION = 1,
 
 option SkillLimiter.AgilityBonus
 {
-	type = integer, min = 0, max = 3, default = 2,
-	page = SkillLimiter, translation = SkillLimiter_AgilityBonus,
+	type = integer,
+	min = 0,
+	max = 3,
+	default = 2,
+
+	page = SkillLimiter,
+	translation = SkillLimiter_AgilityBonus,
 }
 
 option SkillLimiter.CombatBonus
 {
-    type = integer, min = 0, max = 3, default = 1,
-    page = SkillLimiter, translation = SkillLimiter_CombatBonus,
+    type = integer,
+    min = 0,
+    max = 3,
+    default = 1,
+
+    page = SkillLimiter,
+    translation = SkillLimiter_CombatBonus,
 }
 
 option SkillLimiter.CraftingBonus
 {
-    type = integer, min = 0, max = 3, default = 0,
-    page = SkillLimiter, translation = SkillLimiter_CraftingBonus,
+    type = integer,
+    min = 0,
+    max = 3,
+    default = 0,
+
+    page = SkillLimiter,
+    translation = SkillLimiter_CraftingBonus,
 }
 
 option SkillLimiter.FirearmBonus
 {
-    type = integer, min = 0, max = 3, default = 1,
-    page = SkillLimiter, translation = SkillLimiter_FirearmBonus,
+    type = integer,
+    min = 0,
+    max = 3,
+    default = 1,
+
+    page = SkillLimiter,
+    translation = SkillLimiter_FirearmBonus,
 }
 
 option SkillLimiter.SurvivalistBonus
 {
-    type = integer, min = 0, max = 3, default = 0,
-    page = SkillLimiter, translation = SkillLimiter_SurvivalistBonus,
+    type = integer,
+    min = 0,
+    max = 3,
+    default = 0,
+
+    page = SkillLimiter,
+    translation = SkillLimiter_SurvivalistBonus,
 }
 
 option SkillLimiter.PassivesBonus
 {
-    type = integer, min = 0, max = 3, default = 3,
-    page = SkillLimiter, translation = SkillLimiter_PassivesBonus,
+    type = integer,
+    min = 0,
+    max = 3,
+    default = 3,
+
+    page = SkillLimiter,
+    translation = SkillLimiter_PassivesBonus,
 }
