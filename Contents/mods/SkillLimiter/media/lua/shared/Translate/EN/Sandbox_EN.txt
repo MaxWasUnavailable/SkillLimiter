@@ -18,4 +18,7 @@ Sandbox_EN = {
 
 	Sandbox_SkillLimiter_PassivesBonus = "Passives Bonus",
 	Sandbox_SkillLimiter_PassivesBonus_tooltip = "The bonus to the skill cap for passive skills. (0 - 3)",
+
+	Sandbox_SkillLimiter_LockdownFixes = "Lockdown Fixes",
+	Sandbox_SkillLimiter_LockdownFixes_tooltip = "Adds a bonus to perks that cannot attain level 10 with the Lockdown modpack.",
 }

@@ -65,3 +65,12 @@ option SkillLimiter.PassivesBonus
     page = SkillLimiter,
     translation = SkillLimiter_PassivesBonus,
 }
+
+option SkillLimiter.LockdownFixes
+{
+    type = boolean,
+    default = false,
+
+    page = SkillLimiter,
+    translation = SkillLimiter_LockdownFixes,
+}
