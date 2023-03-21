@@ -90,6 +90,11 @@ local function getPerkBonus(perk)
         local perk_bonus_value = tonumber(split_perk_bonus[2])
 
         if perk_name == perk:getId():lower() then
+            if perk_bonus_value == nil then
+                print("SkillLimiter: Invalid perk bonus value for perk " .. perk:getId() .. ". Please check your sandbox settings.")
+                return 0
+            end
+
             return perk_bonus_value
         end
     end
