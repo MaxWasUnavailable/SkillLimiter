@@ -74,13 +74,23 @@ end
 local function getPerkBonus(perk)
     local perkBonuses = SandboxVars.SkillLimiter.PerkBonuses
     if perkBonuses == nil then
-        perkBonuses = {}
+        perkBonuses = ""
     end
     -- parse perk bonuses. Comma separated list of perk id:bonus pairs
     for perkBonus in perkBonuses:gmatch("[^;]+") do
-        local perkBonusSplit = perkBonus:split(":")
-        if perkBonusSplit[1] == perk:getId() then
-            return tonumber(perkBonusSplit[2])
+
+        local split_perk_bonus = {}
+
+        for perk_bonus_value in perkBonus:gmatch("[^:]+") do
+            table.insert(split_perk_bonus, perk_bonus_value)
+        end
+
+        -- The first value is the perk id, the second is the bonus
+        local perk_name = split_perk_bonus[1]:lower()
+        local perk_bonus_value = tonumber(split_perk_bonus[2])
+
+        if perk_name == perk:getId():lower() then
+            return perk_bonus_value
         end
     end
 
@@ -193,7 +203,10 @@ local function limitSkill(character, perk, level)
     end
 
     -- If the perk is in the perk bonus list, add the bonus to the total.
-    bonus = bonus + getPerkBonus(perk)
+    success, perk_bonus = pcall(getPerkBonus, perk)
+    if success then
+        bonus = bonus + perk_bonus
+    end
 
     -- If bonus is 3 or more, we do not need to check whether or not we should cap the skill. Return.
     if bonus >= 3 then
