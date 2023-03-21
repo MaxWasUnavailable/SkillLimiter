@@ -151,19 +151,19 @@ local function limitSkill(character, perk, level)
     local bonus = 0
 
     -- If perk is Sprinting, Lightfooted, Nimble, or Sneaking, add the relevant Agility bonus.
-    if perk_name == "sprinting" or perk_name == "lightfooted" or perk_name == "nimble" or perk_name == "sneaking" then
+    if perk_name == "sprinting" or perk_name == "lightfoot" or perk_name == "nimble" or perk_name == "sneak" then
         bonus = getAgilityBonus()
         perk_found = true
     end
 
     -- If perk is Axe, Long Blunt, Short Blunt, Long Blade, Short Blade, Spear, or Maintenance, then we add the relevant Combat bonus.
-    if perk_name == "axe" or perk_name == "long blunt" or perk_name == "short blunt" or perk_name == "long blade" or perk_name == "short blade" or perk_name == "spear" or perk_name == "maintenance" then
+    if perk_name == "axe" or perk_name == "blunt" or perk_name == "smallblunt" or perk_name == "longblade" or perk_name == "smallblade" or perk_name == "spear" or perk_name == "maintenance" then
         bonus = getCombatBonus()
         perk_found = true
     end
 
     -- If perk is Carpentry, Cooking, Farming, First Aid, Electrical, Metalworking, Mechanics, or Tailoring, then we add the relevant Crafting bonus.
-    if perk_name == "carpentry" or perk_name == "cooking" or perk_name == "farming" or perk_name == "first aid" or perk_name == "electrical" or perk_name == "metalworking" or perk_name == "mechanics" or perk_name == "tailoring" then
+    if perk_name == "woodwork" or perk_name == "cooking" or perk_name == "farming" or perk_name == "doctor" or perk_name == "electricity" or perk_name == "metalwelding" or perk_name == "mechanics" or perk_name == "tailoring" then
         bonus = getCraftingBonus()
         perk_found = true
     end
@@ -175,7 +175,7 @@ local function limitSkill(character, perk, level)
     end
 
     -- If perk is Fishing, Trapping, or Foraging, add the relevant Survivalist bonus.
-    if perk_name == "fishing" or perk_name == "trapping" or perk_name == "foraging" then
+    if perk_name == "fishing" or perk_name == "trapping" or perk_name == "plantscavenging" then
         bonus = getSurvivalistBonus()
         perk_found = true
     end
