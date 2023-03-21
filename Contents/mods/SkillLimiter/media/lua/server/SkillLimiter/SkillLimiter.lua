@@ -76,7 +76,7 @@ local function getPerkBonus(perk)
     if perkBonuses == nil then
         perkBonuses = ""
     end
-    -- parse perk bonuses. Comma separated list of perk id:bonus pairs
+    -- parse perk bonuses. Semicolon separated list of perk id:bonus pairs
     for perkBonus in perkBonuses:gmatch("[^;]+") do
 
         local split_perk_bonus = {}
