@@ -19,6 +19,18 @@ Sandbox_EN = {
 	Sandbox_SkillLimiter_PassivesBonus = "Passives Bonus",
 	Sandbox_SkillLimiter_PassivesBonus_tooltip = "The bonus to the skill cap for passive skills. (0 - 3)",
 
-	Sandbox_SkillLimiter_LockdownFixes = "Lockdown Fixes",
-	Sandbox_SkillLimiter_LockdownFixes_tooltip = "Adds a bonus to perks that cannot attain level 10 with the Lockdown modpack.",
+	Sandbox_SkillLimiter_PerkLvl0Cap = "Perk Level 0 Cap",
+	Sandbox_SkillLimiter_PerkLvl0Cap_tooltip = "The maximum level for perks where a user has no points in the skill. (0 - 10, default 5)",
+
+	Sandbox_SkillLimiter_PerkLvl1Cap = "Perk Level 1 Cap",
+	Sandbox_SkillLimiter_PerkLvl1Cap_tooltip = "The maximum level for perks where a user has 1 point in the skill. (0 - 10, default 7)",
+
+	Sandbox_SkillLimiter_PerkLvl2Cap = "Perk Level 2 Cap",
+	Sandbox_SkillLimiter_PerkLvl2Cap_tooltip = "The maximum level for perks where a user has 2 points in the skill. (0 - 10, default 9)",
+
+	Sandbox_SkillLimiter_PerkLvl3Cap = "Perk Level 3 Cap",
+	Sandbox_SkillLimiter_PerkLvl3Cap_tooltip = "The maximum level for perks where a user has 3 points in the skill. (0 - 10, default 10)",
+
+	Sandbox_SkillLimiter_PerkBonuses = "Perk Bonuses",
+	Sandbox_SkillLimiter_PerkBonuses_tooltip = "Semicolon separated list of bonuses to add to perks. (e.g. \"Perk1:1;Perk2:3;Perk3:1\")",
 }

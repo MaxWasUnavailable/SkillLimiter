@@ -58,13 +58,22 @@ local function getPassivesBonus()
     return bonus
 end
 
----@return boolean
-local function isLockdownFixesEnabled()
-    local enabled = SandboxVars.SkillLimiter.LockdownFixes
-    if enabled == nil then
-        enabled = false
+---@return number
+---@param perk PerkFactory.Perk
+local function getPerkBonus(perk)
+    local perkBonuses = SandboxVars.SkillLimiter.PerkBonuses
+    if perkBonuses == nil then
+        perkBonuses = {}
     end
-    return enabled
+    -- parse perk bonuses. Comma separated list of perk id:bonus pairs
+    for perkBonus in perkBonuses:gmatch("[^;]+") do
+        local perkBonusSplit = perkBonus:split(":")
+        if perkBonusSplit[1] == perk:getId() then
+            return tonumber(perkBonusSplit[2])
+        end
+    end
+
+    return 0
 end
 
 ---@return number
@@ -84,7 +93,7 @@ local function getMaxSkill(character, perk, bonus)
         if map then
             local mapTable = transformIntoKahluaTable(map)
             for trait_perk, level in pairs(mapTable) do
-                if trait_perk:getName() == perk:getName() then
+                if trait_perk:getId() == perk:getId() then
                     trait_perk_level = trait_perk_level + level:intValue()
                 end
             end
@@ -98,7 +107,7 @@ local function getMaxSkill(character, perk, bonus)
     if profession_xp_boost_map then
         local mapTable = transformIntoKahluaTable(profession_xp_boost_map)
         for prof_perk, level in pairs(mapTable) do
-            if prof_perk:getName() == perk:getName() then
+            if prof_perk:getId() == perk:getId() then
                 trait_perk_level = trait_perk_level + level:intValue()
             end
         end
@@ -108,17 +117,17 @@ local function getMaxSkill(character, perk, bonus)
         trait_perk_level = trait_perk_level + bonus
     end
 
-    if trait_perk_level == 0 then
-        return 5
+    if trait_perk_level <= 0 then
+        return SandboxVars.SkillLimiter.PerkLvl0Cap
     end
     if trait_perk_level == 1 then
-        return 7
+        return SandboxVars.SkillLimiter.PerkLvl1Cap
     end
     if trait_perk_level == 2 then
-        return 9
+        return SandboxVars.SkillLimiter.PerkLvl2Cap
     end
     if trait_perk_level >= 3 then
-        return 10
+        return SandboxVars.SkillLimiter.PerkLvl3Cap
     end
 end
 
@@ -126,7 +135,7 @@ end
 ---@param perk PerkFactory.Perk
 ---@param level Integer
 local function limitSkill(character, perk, level)
-    local perk_name = perk:getName():lower()
+    local perk_name = perk:getId():lower()
     local perk_found = false
     local bonus = 0
 
@@ -172,14 +181,10 @@ local function limitSkill(character, perk, level)
         return
     end
 
-    -- Some custom adjustments for the Lockdown modpack due to a lack of perks that add sufficient points for certain skills.
-    if isLockdownFixesEnabled() then
-        if perk_name == "tailoring" then
-            bonus = bonus + 2
-        end
-    end
+    -- If the perk is in the perk bonus list, add the bonus to the total.
+    bonus = bonus + getPerkBonus(perk)
 
-    -- If bonus is 3, we do not need to check whether or not we should cap the skill. Return.
+    -- If bonus is 3 or more, we do not need to check whether or not we should cap the skill. Return.
     if bonus >= 3 then
         print("SkillLimiter: Not limiting since bonus >= 3: (" .. bonus .. ")")
         return
@@ -198,8 +203,8 @@ local function limitSkill(character, perk, level)
         character:setPerkLevelDebug(perk, max_skill)
         SyncXp(character)
 
-        print("SkillLimiter: " .. character:getFullName() .. " leveled up " .. perk:getName() .. " and was capped to " .. max_skill .. "." .. "Bonus: " .. bonus)
-        HaloTextHelper.addText(character, "The " .. perk:getName() .. " skill was capped to " .. max_skill .. ".", HaloTextHelper.getColorWhite())
+        print("SkillLimiter: " .. character:getFullName() .. " leveled up " .. perk:getId() .. " and was capped to " .. max_skill .. "." .. "Bonus: " .. bonus)
+        HaloTextHelper.addText(character, "The " .. perk:getId() .. " skill was capped to " .. max_skill .. ".", HaloTextHelper.getColorWhite())
     end
 end
 
@@ -251,7 +256,6 @@ local function init_check()
             limitSkill(character, perk, level)
         end
     end
-
 end
 
 Events.LevelPerk.Add(add_to_table)

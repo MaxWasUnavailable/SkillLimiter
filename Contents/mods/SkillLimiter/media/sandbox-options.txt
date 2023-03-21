@@ -66,11 +66,55 @@ option SkillLimiter.PassivesBonus
     translation = SkillLimiter_PassivesBonus,
 }
 
-option SkillLimiter.LockdownFixes
+option SkillLimiter.PerkLvl0Cap
 {
-    type = boolean,
-    default = false,
+    type = integer,
+    min = 0,
+    max = 10,
+    default = 5,
 
     page = SkillLimiter,
-    translation = SkillLimiter_LockdownFixes,
+    translation = SkillLimiter_PerkLvl0Cap,
+}
+
+option SkillLimiter.PerkLvl1Cap
+{
+    type = integer,
+    min = 0,
+    max = 10,
+    default = 7,
+
+    page = SkillLimiter,
+    translation = SkillLimiter_PerkLvl1Cap,
+}
+
+option SkillLimiter.PerkLvl2Cap
+{
+    type = integer,
+    min = 0,
+    max = 10,
+    default = 9,
+
+    page = SkillLimiter,
+    translation = SkillLimiter_PerkLvl2Cap,
+}
+
+option SkillLimiter.PerkLvl3Cap
+{
+    type = integer,
+    min = 0,
+    max = 10,
+    default = 10,
+
+    page = SkillLimiter,
+    translation = SkillLimiter_PerkLvl3Cap,
+}
+
+option SkillLimiter.PerkBonuses
+{
+    type = string,
+    default = "strength:0;foraging:0;farming:0"
+
+    page = SkillLimiter,
+    translation = SkillLimiter_PerkBonuses,
 }
