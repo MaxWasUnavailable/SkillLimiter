@@ -113,7 +113,7 @@ option SkillLimiter.PerkLvl3Cap
 option SkillLimiter.PerkBonuses
 {
     type = string,
-    default = "strength:0;foraging:0;farming:0"
+    default = metalwelding:0;mechanics:0;plantscavenging:0,
 
     page = SkillLimiter,
     translation = SkillLimiter_PerkBonuses,
