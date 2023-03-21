@@ -4,6 +4,17 @@
 --- Created on: 10/07/2022 21:23
 ---
 
+-- Mod info class
+---@class SkillLimiter
+SkillLimiter = {}
+
+-- Mod info
+SkillLimiter.modName = "SkillLimiter"
+SkillLimiter.modVersion = "1.0.0"
+SkillLimiter.modAuthor = "Max"
+SkillLimiter.modDescription = "Limits the maximum skill level of a character based on their traits and profession."
+
+
 ---@return number
 local function getAgilityBonus()
     local bonus = SandboxVars.SkillLimiter.AgilityBonus
@@ -245,8 +256,6 @@ local function check_table()
 end
 
 local function init_check()
-    Events.OnTick.Remove(init_check)
-
     local character = getPlayer()
 
     if character then
@@ -258,6 +267,14 @@ local function init_check()
     end
 end
 
+local function init()
+    Events.OnTick.Remove(init)
+
+    print(SkillLimiter.modName .. " " .. SkillLimiter.modVersion .. " initialized.")
+
+    init_check()
+end
+
 Events.LevelPerk.Add(add_to_table)
 Events.OnTick.Add(check_table)
-Events.OnTick.Add(init_check);
+Events.OnTick.Add(init);
