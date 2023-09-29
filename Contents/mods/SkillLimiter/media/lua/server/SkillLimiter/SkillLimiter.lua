@@ -1,6 +1,6 @@
 ---
 --- Created by Max
---- Significant help from: Konijima#9279
+--- Initial help from: Konijima#9279
 --- Created on: 10/07/2022 21:23
 ---
 
@@ -10,10 +10,11 @@ SkillLimiter = {}
 
 -- Mod info
 SkillLimiter.modName = "SkillLimiter"
-SkillLimiter.modVersion = "1.0.0"
+SkillLimiter.modVersion = "1.1.0"
 SkillLimiter.modAuthor = "Max"
 SkillLimiter.modDescription = "Limits the maximum skill level of a character based on their traits and profession."
 
+-- Fetch sandbox vars
 
 ---@return number
 local function getAgilityBonus()
@@ -69,9 +70,10 @@ local function getPassivesBonus()
     return bonus
 end
 
+--- Get the custom bonus for a perk from the SandboxVars.SkillLimiter.PerkBonuses setting.
 ---@return number
 ---@param perk PerkFactory.Perk
-local function getPerkBonus(perk)
+local function getCustomPerkBonus(perk)
     local perkBonuses = SandboxVars.SkillLimiter.PerkBonuses
     if perkBonuses == nil then
         perkBonuses = ""
@@ -102,14 +104,90 @@ local function getPerkBonus(perk)
     return 0
 end
 
+-- Mod methods
+
+--- Get the bonus for a perk based on the SandboxVars settings.
+---@return number
+---@param perk PerkFactory.Perk
+local function getPerkBonus(perk)
+    local perk_name = perk:getId():lower()
+    local perk_found = false
+    local bonus = 0
+
+    -- If perk is Sprinting, Lightfooted, Nimble, or Sneaking, add the relevant Agility bonus.
+    if perk_name == "sprinting" or perk_name == "lightfoot" or perk_name == "nimble" or perk_name == "sneak" then
+        bonus = getAgilityBonus()
+        perk_found = true
+    end
+
+    -- If perk is Axe, Long Blunt, Short Blunt, Long Blade, Short Blade, Spear, or Maintenance, then we add the relevant Combat bonus.
+    if perk_name == "axe" or perk_name == "blunt" or perk_name == "smallblunt" or perk_name == "longblade" or perk_name == "smallblade" or perk_name == "spear" or perk_name == "maintenance" then
+        bonus = getCombatBonus()
+        perk_found = true
+    end
+
+    -- If perk is Carpentry, Cooking, Farming, First Aid, Electrical, Metalworking, Mechanics, or Tailoring, then we add the relevant Crafting bonus.
+    if perk_name == "woodwork" or perk_name == "cooking" or perk_name == "farming" or perk_name == "doctor" or perk_name == "electricity" or perk_name == "metalwelding" or perk_name == "mechanics" or perk_name == "tailoring" then
+        bonus = getCraftingBonus()
+        perk_found = true
+    end
+
+    -- If perk is Aiming or Reloading, then we add the relevant Firearm bonus.
+    if perk_name == "aiming" or perk_name == "reloading" then
+        bonus = getFirearmBonus()
+        perk_found = true
+    end
+
+    -- If perk is Fishing, Trapping, or Foraging, add the relevant Survivalist bonus.
+    if perk_name == "fishing" or perk_name == "trapping" or perk_name == "plantscavenging" then
+        bonus = getSurvivalistBonus()
+        perk_found = true
+    end
+
+    -- If perk is Strength or Fitness, add the relevant Passives bonus.
+    if perk_name == "strength" or perk_name == "fitness" then
+        bonus = getPassivesBonus()
+        perk_found = true
+    end
+
+    -- If perk is not found, then we do not need to limit the skill. This is to provide compatibility with other mods that add skills.
+    if not perk_found then
+        return nil
+    end
+
+    -- If the perk is in the perk bonus list, add the bonus to the total.
+    local success, perk_bonus = pcall(getCustomPerkBonus, perk)
+    if success then
+        bonus = bonus + perk_bonus
+    else
+        print("SkillLimiter: Error. Could not get custom perk bonus for perk " .. perk:getId() .. ". Please check your sandbox settings.")
+    end
+
+    return bonus
+end
+
+--- Get the maximum skill level for a character based on their traits and profession.
 ---@return number
 ---@param character IsoGameCharacter
 ---@param perk PerkFactory.Perk
 ---@param bonus number @The bonus to apply to final score before deciding max skill level. Can be left nil.
-local function getMaxSkill(character, perk, bonus)
+local function getMaxSkill(character, perk)
     local character_traits = character:getTraits()
     local character_profession_str = character:getDescriptor():getProfession()
     local trait_perk_level = 0
+
+    local bonus = getPerkBonus(perk)
+
+    if not bonus then
+        print("SkillLimiter: Not limiting since perk was not found: " .. perk:getId() .. ".")
+        return SandboxVars.SkillLimiter.PerkLvl3Cap
+    end
+
+    -- If bonus is 3 or more, we do not need to check whether or not we should cap the skill. Return.
+    if bonus >= 3 then
+        print("SkillLimiter: Not limiting since bonus >= 3: (" .. bonus .. ")")
+        return SandboxVars.SkillLimiter.PerkLvl3Cap
+    end
 
     -- Go through all traits and add their relevant perk level to the total
     for i=0, character_traits:size()-1 do
@@ -161,66 +239,8 @@ end
 ---@param perk PerkFactory.Perk
 ---@param level Integer
 local function limitSkill(character, perk, level)
-    local perk_name = perk:getId():lower()
-    local perk_found = false
-    local bonus = 0
-
-    -- If perk is Sprinting, Lightfooted, Nimble, or Sneaking, add the relevant Agility bonus.
-    if perk_name == "sprinting" or perk_name == "lightfoot" or perk_name == "nimble" or perk_name == "sneak" then
-        bonus = getAgilityBonus()
-        perk_found = true
-    end
-
-    -- If perk is Axe, Long Blunt, Short Blunt, Long Blade, Short Blade, Spear, or Maintenance, then we add the relevant Combat bonus.
-    if perk_name == "axe" or perk_name == "blunt" or perk_name == "smallblunt" or perk_name == "longblade" or perk_name == "smallblade" or perk_name == "spear" or perk_name == "maintenance" then
-        bonus = getCombatBonus()
-        perk_found = true
-    end
-
-    -- If perk is Carpentry, Cooking, Farming, First Aid, Electrical, Metalworking, Mechanics, or Tailoring, then we add the relevant Crafting bonus.
-    if perk_name == "woodwork" or perk_name == "cooking" or perk_name == "farming" or perk_name == "doctor" or perk_name == "electricity" or perk_name == "metalwelding" or perk_name == "mechanics" or perk_name == "tailoring" then
-        bonus = getCraftingBonus()
-        perk_found = true
-    end
-
-    -- If perk is Aiming or Reloading, then we add the relevant Firearm bonus.
-    if perk_name == "aiming" or perk_name == "reloading" then
-        bonus = getFirearmBonus()
-        perk_found = true
-    end
-
-    -- If perk is Fishing, Trapping, or Foraging, add the relevant Survivalist bonus.
-    if perk_name == "fishing" or perk_name == "trapping" or perk_name == "plantscavenging" then
-        bonus = getSurvivalistBonus()
-        perk_found = true
-    end
-
-    -- If perk is Strength or Fitness, add the relevant Passives bonus.
-    if perk_name == "strength" or perk_name == "fitness" then
-        bonus = getPassivesBonus()
-        perk_found = true
-    end
-
-    -- If perk is not found, then we do not need to limit the skill. This is to provide compatibility with other mods that add skills.
-    if not perk_found then
-        print("SkillLimiter: Not limiting since perk was not found: " .. perk_name)
-        return
-    end
-
-    -- If the perk is in the perk bonus list, add the bonus to the total.
-    success, perk_bonus = pcall(getPerkBonus, perk)
-    if success then
-        bonus = bonus + perk_bonus
-    end
-
-    -- If bonus is 3 or more, we do not need to check whether or not we should cap the skill. Return.
-    if bonus >= 3 then
-        print("SkillLimiter: Not limiting since bonus >= 3: (" .. bonus .. ")")
-        return
-    end
-
     -- Get the maximum skill level for this perk, based on the character's traits & profession.
-    local max_skill = getMaxSkill(character, perk, bonus)
+    local max_skill = getMaxSkill(character, perk)
     if max_skill == nil then
         print("SkillLimiter: Error. Max Skill is nil.")
         return
@@ -232,7 +252,7 @@ local function limitSkill(character, perk, level)
         character:setPerkLevelDebug(perk, max_skill)
         SyncXp(character)
 
-        print("SkillLimiter: " .. character:getFullName() .. " leveled up " .. perk:getId() .. " and was capped to " .. max_skill .. "." .. "Bonus: " .. bonus)
+        print("SkillLimiter: " .. character:getFullName() .. " leveled up " .. perk:getId() .. " and was capped to " .. max_skill .. ".")
         HaloTextHelper.addText(character, "The " .. perk:getId() .. " skill was capped to " .. max_skill .. ".", HaloTextHelper.getColorWhite())
     end
 end
