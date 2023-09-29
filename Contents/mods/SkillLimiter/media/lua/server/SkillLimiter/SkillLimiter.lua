@@ -110,47 +110,47 @@ end
 ---@return number
 ---@param perk PerkFactory.Perk
 local function getPerkBonus(perk)
-    local perk_name = perk:getId():lower()
+    local perk_category = perk:getParent():getId():lower()
     local perk_found = false
     local bonus = 0
 
-    -- If perk is Sprinting, Lightfooted, Nimble, or Sneaking, add the relevant Agility bonus.
-    if perk_name == "sprinting" or perk_name == "lightfoot" or perk_name == "nimble" or perk_name == "sneak" then
+    -- If perk is part of the Agility category, add the relevant bonus.
+    if perk_category == "agility" then
         bonus = getAgilityBonus()
         perk_found = true
     end
 
-    -- If perk is Axe, Long Blunt, Short Blunt, Long Blade, Short Blade, Spear, or Maintenance, then we add the relevant Combat bonus.
-    if perk_name == "axe" or perk_name == "blunt" or perk_name == "smallblunt" or perk_name == "longblade" or perk_name == "smallblade" or perk_name == "spear" or perk_name == "maintenance" then
+    -- If perk is part of the Combat category, add the relevant bonus.
+    if perk_category == "combat" then
         bonus = getCombatBonus()
         perk_found = true
     end
 
-    -- If perk is Carpentry, Cooking, Farming, First Aid, Electrical, Metalworking, Mechanics, or Tailoring, then we add the relevant Crafting bonus.
-    if perk_name == "woodwork" or perk_name == "cooking" or perk_name == "farming" or perk_name == "doctor" or perk_name == "electricity" or perk_name == "metalwelding" or perk_name == "mechanics" or perk_name == "tailoring" then
+    -- If perk is part of the Crafting category, add the relevant bonus.
+    if perk_category == "crafting" then
         bonus = getCraftingBonus()
         perk_found = true
     end
 
-    -- If perk is Aiming or Reloading, then we add the relevant Firearm bonus.
-    if perk_name == "aiming" or perk_name == "reloading" then
+    -- If perk is part of the Firearm category, add the relevant bonus.
+    if perk_category == "firearm" then
         bonus = getFirearmBonus()
         perk_found = true
     end
 
-    -- If perk is Fishing, Trapping, or Foraging, add the relevant Survivalist bonus.
-    if perk_name == "fishing" or perk_name == "trapping" or perk_name == "plantscavenging" then
+    -- If perk is part of the Survivalist category, add the relevant bonus.
+    if perk_category == "survivalist" then
         bonus = getSurvivalistBonus()
         perk_found = true
     end
 
-    -- If perk is Strength or Fitness, add the relevant Passives bonus.
-    if perk_name == "strength" or perk_name == "fitness" then
+    -- If perk is part of the Passiv category, add the relevant bonus.
+    if perk_category == "passiv" then
         bonus = getPassivesBonus()
         perk_found = true
     end
 
-    -- If perk is not found, then we do not need to limit the skill. This is to provide compatibility with other mods that add skills.
+    -- If perk is not found, then we do not need to limit the skill. This is to provide compatibility (aka: don't cause errors) with other mods that add skills.
     if not perk_found then
         return nil
     end
@@ -179,13 +179,13 @@ local function getMaxSkill(character, perk)
     local bonus = getPerkBonus(perk)
 
     if not bonus then
-        print("SkillLimiter: Not limiting since perk was not found: " .. perk:getId() .. ".")
+        print("SkillLimiter: Limiting to max cap since perk was not found: " .. perk:getId() .. ".")
         return SandboxVars.SkillLimiter.PerkLvl3Cap
     end
 
     -- If bonus is 3 or more, we do not need to check whether or not we should cap the skill. Return.
     if bonus >= 3 then
-        print("SkillLimiter: Not limiting since bonus >= 3: (" .. bonus .. ")")
+        print("SkillLimiter: Limiting to max cap since bonus >= 3: (" .. bonus .. ")")
         return SandboxVars.SkillLimiter.PerkLvl3Cap
     end
 
