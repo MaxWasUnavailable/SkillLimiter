@@ -109,7 +109,7 @@ end
 --- Get the bonus for a perk based on the SandboxVars settings.
 ---@return number
 ---@param perk PerkFactory.Perk
-local function getPerkBonus(perk)
+SkillLimiter.getPerkBonus = function(perk)
     local perk_category = perk:getParent():getId():lower()
     local perk_found = false
     local bonus = 0
@@ -170,13 +170,12 @@ end
 ---@return number
 ---@param character IsoGameCharacter
 ---@param perk PerkFactory.Perk
----@param bonus number @The bonus to apply to final score before deciding max skill level. Can be left nil.
-local function getMaxSkill(character, perk)
+SkillLimiter.getMaxSkill = function(character, perk)
     local character_traits = character:getTraits()
     local character_profession_str = character:getDescriptor():getProfession()
     local trait_perk_level = 0
 
-    local bonus = getPerkBonus(perk)
+    local bonus = SkillLimiter.getPerkBonus(perk)
 
     if not bonus then
         print("SkillLimiter: Limiting to max cap since perk was not found: " .. perk:getId() .. ".")
@@ -238,9 +237,9 @@ end
 ---@param character IsoGameCharacter
 ---@param perk PerkFactory.Perk
 ---@param level Integer
-local function limitSkill(character, perk, level)
+SkillLimiter.limitSkill = function(character, perk, level)
     -- Get the maximum skill level for this perk, based on the character's traits & profession.
-    local max_skill = getMaxSkill(character, perk)
+    local max_skill = SkillLimiter.getMaxSkill(character, perk)
     if max_skill == nil then
         print("SkillLimiter: Error. Max Skill is nil.")
         return
@@ -252,14 +251,17 @@ local function limitSkill(character, perk, level)
         character:setPerkLevelDebug(perk, max_skill)
         SyncXp(character)
 
-        print("SkillLimiter: " .. character:getFullName() .. " leveled up " .. perk:getId() .. " and was capped to " .. max_skill .. ".")
-        HaloTextHelper.addText(character, "The " .. perk:getId() .. " skill was capped to " .. max_skill .. ".", HaloTextHelper.getColorWhite())
+        print("SkillLimiter: " .. character:getFullName() .. " leveled up " .. perk:getId() .. " and was capped to level " .. max_skill .. ".")
+        HaloTextHelper.addText(character, "The " .. perk:getId() .. " skill was capped to level " .. max_skill .. ".", HaloTextHelper.getColorWhite())
     end
 end
 
+-- Mod event variables
 
-local ticks_since_check = 0
-local perks_leveled_up = {}
+SkillLimiter.ticks_since_check = 0
+SkillLimiter.perks_leveled_up = {}
+
+-- Mod events
 
 ---@param character IsoGameCharacter
 ---@param perk PerkFactory.Perk
@@ -272,7 +274,7 @@ local function add_to_table(character, perk, level, levelUp)
         return
     end
 
-    table.insert(perks_leveled_up, {
+    table.insert(SkillLimiter.perks_leveled_up, {
         character = character,
         perk = perk,
         level = level
@@ -280,17 +282,17 @@ local function add_to_table(character, perk, level, levelUp)
 end
 
 local function check_table()
-    if (ticks_since_check < 30) then
-        ticks_since_check = ticks_since_check + 1
+    if (SkillLimiter.ticks_since_check < 30) then
+        SkillLimiter.ticks_since_check = SkillLimiter.ticks_since_check + 1
         return
     end
 
-    ticks_since_check = 0
+    SkillLimiter.ticks_since_check = 0
 
-    for i, v in ipairs(perks_leveled_up) do
-        limitSkill(v.character, v.perk, v.level)
+    for i, v in ipairs(SkillLimiter.perks_leveled_up) do
+        SkillLimiter.limitSkill(v.character, v.perk, v.level)
     end
-    perks_leveled_up = {}
+    SkillLimiter.perks_leveled_up = {}
 end
 
 local function init_check()
@@ -300,7 +302,7 @@ local function init_check()
         for j=0, Perks.getMaxIndex() - 1 do
             local perk = PerkFactory.getPerk(Perks.fromIndex(j))
             local level = character:getPerkLevel(perk)
-            limitSkill(character, perk, level)
+            SkillLimiter.limitSkill(character, perk, level)
         end
     end
 end
