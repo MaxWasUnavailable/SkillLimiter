@@ -1,6 +1,7 @@
 ---
 --- Created by Max
 --- Initial help from: Konijima#9279
+--- Profession bugfix by: ladyinkateing
 --- Created on: 10/07/2022 21:23
 ---
 
@@ -10,7 +11,7 @@ SkillLimiter = {}
 
 -- Mod info
 SkillLimiter.modName = "SkillLimiter"
-SkillLimiter.modVersion = "1.1.0"
+SkillLimiter.modVersion = "1.1.1"
 SkillLimiter.modAuthor = "Max"
 SkillLimiter.modDescription = "Limits the maximum skill level of a character based on their traits and profession."
 
