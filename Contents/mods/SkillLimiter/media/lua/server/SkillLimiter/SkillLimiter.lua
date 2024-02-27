@@ -206,12 +206,14 @@ SkillLimiter.getMaxSkill = function(character, perk)
     local character_profession = ProfessionFactory.getProfession(character_profession_str)
 
     -- Go through the XPBoostMap of the profession and add the relevant perk level to the total
-    local profession_xp_boost_map = character_profession:getXPBoostMap()
-    if profession_xp_boost_map then
-        local mapTable = transformIntoKahluaTable(profession_xp_boost_map)
-        for prof_perk, level in pairs(mapTable) do
-            if prof_perk:getId() == perk:getId() then
-                trait_perk_level = trait_perk_level + level:intValue()
+    if character_profession then
+        local profession_xp_boost_map = character_profession:getXPBoostMap()
+        if profession_xp_boost_map then
+            local mapTable = transformIntoKahluaTable(profession_xp_boost_map)
+            for prof_perk, level in pairs(mapTable) do
+                if prof_perk:getId() == perk:getId() then
+                    trait_perk_level = trait_perk_level + level:intValue()
+                end
             end
         end
     end
