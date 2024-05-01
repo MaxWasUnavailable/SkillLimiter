@@ -33,4 +33,7 @@ Sandbox_EN = {
 
 	Sandbox_SkillLimiter_PerkBonuses = "Perk Bonuses",
 	Sandbox_SkillLimiter_PerkBonuses_tooltip = "Semicolon separated list of bonuses to add to perks. (e.g. Perk1:1;Perk2:3;Perk3:1)",
+
+	Sandbox_SkillLimiter_EveryTenMins = "Check Every Ten Minutes",
+	Sandbox_SkillLimiter_EveryTenMins_tooltip = "Check for level-ups to limit every ten in-game minutes instead of every tick. Less responsive but more performant.",
 }

@@ -118,3 +118,12 @@ option SkillLimiter.PerkBonuses
     page = SkillLimiter,
     translation = SkillLimiter_PerkBonuses,
 }
+
+option SkillLimiter.EveryTenMins
+{
+    type = boolean,
+    default = false,
+
+    page = SkillLimiter,
+    translation = SkillLimiter_EveryTenMins,
+}

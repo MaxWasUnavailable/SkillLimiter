@@ -298,6 +298,13 @@ local function check_table()
     SkillLimiter.perks_leveled_up = {}
 end
 
+local function check_table_10m()
+    for i, v in ipairs(SkillLimiter.perks_leveled_up) do
+        SkillLimiter.limitSkill(v.character, v.perk, v.level)
+    end
+    SkillLimiter.perks_leveled_up = {}
+end
+
 local function init_check()
     local character = getPlayer()
 
@@ -319,5 +326,12 @@ local function init()
 end
 
 Events.LevelPerk.Add(add_to_table)
-Events.OnTick.Add(check_table)
+
+local checkEveryTenMins = SandboxVars.SkillLimiter.EveryTenMins
+if checkEveryTenMins then 
+    Events.EveryTenMinutes.Add(check_table_10m)
+else
+    Events.OnTick.Add(check_table)
+end
+
 Events.OnTick.Add(init);
